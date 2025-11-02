@@ -58,7 +58,7 @@ export default function PostForm({
   }, [watchedImage, setImagePreview]);
 
   const handleFormSubmit: SubmitHandler<FormData> = (data) => {
-    onSubmit({ ...data, imagePreview }); // Pass preview URL if needed
+    // onSubmit({ ...data, imagePreview }); // Pass preview URL if needed
     reset();
     setImagePreview(null);
   };
@@ -77,7 +77,7 @@ export default function PostForm({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(handleFormSubmit)} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="p-6 space-y-6 text-black">
           {/* Title */}
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
@@ -87,7 +87,7 @@ export default function PostForm({
               {...register("title")}
               type="text"
               id="title"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+              className="w-full text-black px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
               placeholder="Enter article title"
             />
             {errors.title && <p className="text-red-600 text-sm mt-1">{errors.title.message}</p>}
@@ -120,7 +120,8 @@ export default function PostForm({
               accept="image/*"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer"
             />
-            {errors.image && <p className="text-red-600 text-sm mt-1">{errors.image.message}</p>}
+            {/* {errors.image && <p className="text-red-600 text-sm mt-1">{errors.image.message}</p>} */}
+
 
             {imagePreview && (
               <div className="mt-4">
