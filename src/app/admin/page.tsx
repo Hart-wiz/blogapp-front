@@ -6,6 +6,11 @@ import {
   BarChart3, FileText, Users, Eye, MessageSquare, TrendingUp,
   Edit2, Trash2, Plus, Filter, Download, ArrowUp, ArrowDown
 } from 'lucide-react';
+import AdminNav from '@/components/admin/AdminNav';
+import ChartHolder from '@/components/admin/ChartHolder';
+import RecentCard from '@/components/admin/RecentCard';
+import PostForm from '@/components/admin/PostForm';
+
 
 interface Post {
   id: number;
@@ -28,6 +33,19 @@ const AdminDashboard: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedPosts, setSelectedPosts] = useState<number[]>([]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setImagePreview(null);
+  };
+  const handleSubmit = (data: any) => {
+    
+    setIsModalOpen(false);
+  };
+
 
   const stats: Stat[] = [
     {
@@ -135,6 +153,7 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white flex">
+       
       {/* Sidebar */}
       <aside
         className={`${
@@ -224,6 +243,8 @@ const AdminDashboard: React.FC = () => {
 
         {/* Page Content */}
         <main className="flex-1 overflow-auto p-6">
+
+            {/* .........................when active tab is dashboard...................... */}
           {activeTab === 'dashboard' && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
@@ -266,41 +287,17 @@ const AdminDashboard: React.FC = () => {
 
               {/* Chart Placeholder */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-                  <h3 className="font-bold mb-4 flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-purple-400" />
-                    Views Trend
-                  </h3>
-                  <div className="h-64 flex items-end justify-around gap-2 bg-gray-800/30 rounded-lg p-4">
-                    {[40, 60, 35, 80, 55, 70, 65].map((height, idx) => (
-                      <div
-                        key={idx}
-                        className="flex-1 bg-gradient-to-t from-purple-500 to-pink-500 rounded-t hover:opacity-80 transition"
-                        style={{ height: `${height}%` }}
-                      ></div>
-                    ))}
-                  </div>
-                </div>
+                <ChartHolder/>
 
-                <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-                  <h3 className="font-bold mb-4">Recent Activity</h3>
-                  <div className="space-y-3">
-                    {[
-                      { action: 'New post published', time: '2 hours ago' },
-                      { action: 'Comment approved', time: '5 hours ago' },
-                      { action: 'User registered', time: '1 day ago' },
-                      { action: 'Post updated', time: '2 days ago' },
-                    ].map((item, idx) => (
-                      <div key={idx} className="flex justify-between items-center p-3 bg-gray-800/30 rounded-lg">
-                        <span className="text-sm">{item.action}</span>
-                        <span className="text-xs text-gray-500">{item.time}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+
+                {/* Recent activity card */}
+                <RecentCard/>
+                
               </div>
             </div>
           )}
+
+          {/* ......................................when active tab is posts.............................. */}
 
           {activeTab === 'posts' && (
             <div className="space-y-6">
@@ -311,11 +308,29 @@ const AdminDashboard: React.FC = () => {
                     <Filter className="w-4 h-4" />
                     Filter
                   </button>
-                  <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg hover:shadow-lg hover:shadow-purple-500/50 transition font-medium text-sm">
+                  <button   onClick={() => setIsModalOpen(true)}   className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg hover:shadow-lg hover:shadow-purple-500/50 transition font-medium text-sm">
                     <Plus className="w-4 h-4" />
                     New Post
                   </button>
                 </div>
+                
+                {isModalOpen && (
+                <PostForm
+                    closeModal={closeModal}
+                    onSubmit={handleSubmit}
+                    imagePreview={imagePreview}
+                    setImagePreview={setImagePreview} // ← THIS IS CRITICAL
+                />
+                )}
+{/*                         
+                {isModalOpen && (
+                <PostForm
+                    closeModal={closeModal}
+                    onSubmit={handleSubmit}
+                    imagePreview={imagePreview}
+                    setImagePreview={setImagePreview} // ← THIS IS CRITICAL
+                />
+                )} */}
               </div>
 
               {/* Posts Table */}
@@ -392,6 +407,9 @@ const AdminDashboard: React.FC = () => {
               </div>
             </div>
           )}
+
+
+          {/* ..........................others when active tab is not dashboard nor post use coming soon................. */}
 
           {activeTab !== 'dashboard' && activeTab !== 'posts' && (
             <div className="flex items-center justify-center h-96">
